@@ -1,0 +1,11 @@
+Name: dsppack
+Version: 1.0.0
+Date: 2026-06-02
+Author: Mihut Vlad <vlad.mihut@student.upt.ro>
+Maintainer: Mihut Vlad <vlad.mihut@student.upt.ro>
+Title: Filter Design and Analysis Tool for GNU Octave
+Description: A GUI-based tool for designing IIR/FIR filters and analyzing their frequency, phase, and pole-zero responses. Developed for Diploma Project 2026.
+Categories: signal-processing gui
+Depends: octave (>= 6.0.0), signal (>= 1.4.0)
+License: GPLv3+
+Url: https://github.com/Mihutxxl/dsppack

@@ -1,0 +1,12 @@
+# Editor / atomic-write temp files
+*.tmp
+*.tmp.*
+*~
+
+# Octave session & build artifacts
+octave-workspace
+*.oct
+
+# OS metadata
+.DS_Store
+Thumbs.db
