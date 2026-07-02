@@ -36,10 +36,10 @@ Developed as a Diploma Project at UPT (Universitatea Politehnica Timisoara).
 
 ## Installation
 
-### Option 1: Install from local directory
+### Option 1: Install from Octave Github repo
 
 ```octave
-pkg install /path/to/dsppack/
+pkg install -forge dsppack
 ```
 
 ### Option 2: Manual setup
