@@ -1,19 +1,16 @@
 ## -*- texinfo -*-
 ## @deftypefn {Function File} fda_pz_editor (@var{main_fig}, @var{Fs})
-## Interactive Z-Plane pole-zero editor. Places poles and zeros either by
-## clicking on the Z-plane or by typing magnitude (r) and angle (deg) into
+## Interactive Z-Plane pole-zero editor. Places poles and zeros 
+## by typing magnitude (r) and angle (deg) into
 ## the Manual Entry panel.  Enforces complex-conjugate symmetry so the
 ## resulting filter has real coefficients, then submits the design back to
 ## the main FDA Tool window.
 ## @end deftypefn
 
 function fda_pz_editor(main_fig, Fs)
-    snap_thr = 0.05;   % imaginary snap-to-zero threshold (data units)
-
     % Mutable state shared across all nested callbacks via closure
     state.poles = [];   % column vector of complex pole locations
     state.zeros = [];   % column vector of complex zero locations
-    state.mode  = 1;    % 1 = place pole, 0 = place zero
 
     % -------------------------------------------------------------------
     % Editor figure (sized to match the main FDA Tool window)
@@ -131,9 +128,6 @@ function fda_pz_editor(main_fig, Fs)
         "ForegroundColor", [1, 1, 1], ...
         "Callback",        @cb_close);
 
-    % Register Z-plane click handler on the figure level
-    set(h.fig, "WindowButtonDownFcn", @cb_click);
-
     % ===================================================================
     % Callbacks  (nested — share 'state', 'h', 'main_fig', 'Fs' via closure)
     % ===================================================================
@@ -159,7 +153,9 @@ function fda_pz_editor(main_fig, Fs)
         end
 
         pt = r * exp(1j * ang_deg * pi / 180);
-        if abs(imag(pt)) < snap_thr
+        % Angles at 0, 180, 360, ... describe a real root; strip the
+        % floating-point residue of exp() so no bogus conjugate is added.
+        if mod(ang_deg, 180) == 0
             pt = real(pt);
         end
 
@@ -167,56 +163,9 @@ function fda_pz_editor(main_fig, Fs)
         draw_zplane();
     end
 
-    function cb_click(~, ~)
-        % Only respond to a plain left-click...
-        if ~strcmp(get(h.fig, "SelectionType"), "normal")
-            return;
-        end
-
-        % ...that physically landed on the Z-plane axes. Checking the axes'
-        % XLim/YLim alone is not enough: `axis equal` can auto-extend the
-        % data limits, letting clicks from neighbouring controls (notably
-        % the Add Pole / Add Zero buttons) extrapolate into the data range
-        % and get registered as random pole/zero placements.
-        if ~click_in_axes()
-            return;
-        end
-
-        cp = get(h.ax_pz, "CurrentPoint");
-        cx = cp(1, 1);
-        cy = cp(1, 2);
-
-        % Snap near-zero imaginary values to the real axis
-        if abs(cy) < snap_thr
-            cy = 0;
-        end
-
-        if state.mode == 1
-            kind = "pole";
-        else
-            kind = "zero";
-        end
-        add_pt_to_state(kind, cx + 1j * cy);
-        draw_zplane();
-    end
-
-    function tf = click_in_axes()
-        % True iff the figure CurrentPoint falls inside the Z-plane axes'
-        % normalized rectangle.
-        old_units = get(h.fig, "Units");
-        set(h.fig, "Units", "normalized");
-        cp_fig = get(h.fig, "CurrentPoint");
-        set(h.fig, "Units", old_units);
-        ax_pos = get(h.ax_pz, "Position");
-        tf = cp_fig(1) >= ax_pos(1) && ...
-             cp_fig(1) <= ax_pos(1) + ax_pos(3) && ...
-             cp_fig(2) >= ax_pos(2) && ...
-             cp_fig(2) <= ax_pos(2) + ax_pos(4);
-    end
-
     function add_pt_to_state(kind, pt)
         % Append pt (and its conjugate, when non-real) to the pole or
-        % zero list. Shared by cb_click and cb_manual_add.
+        % zero list.
         if strcmp(kind, "pole")
             state.poles = [state.poles; pt];
             if imag(pt) ~= 0
@@ -262,7 +211,7 @@ function fda_pz_editor(main_fig, Fs)
 
     function draw_zplane()
         dsp_draw_zplane(h.ax_pz, state.zeros, state.poles, ...
-                        sprintf("Z-Plane  —  Fs = %.0f Hz  (click to place)", Fs));
+                        sprintf("Z-Plane  —  Fs = %.0f Hz", Fs));
     end
 
 end
