@@ -17,7 +17,7 @@ function dsp_plot_response(ax_mag, ax_phase, b, a, Fs)
         cla;
         plot(wn, 20*log10(abs(H) + eps), "LineWidth", 2);
         title("Magnitude Response");
-        dsp_freq_xticks();
+        dsp_freq_xticks(ax_mag, Fs);
         ylabel("Magnitude (dB)");
         grid on;
         xlim([0, 1]);
@@ -29,7 +29,7 @@ function dsp_plot_response(ax_mag, ax_phase, b, a, Fs)
         cla;
         plot(wn, unwrap(angle(H)) * (180 / pi), "LineWidth", 2, "Color", [0.85, 0.33, 0.10]);
         title("Phase Response");
-        dsp_freq_xticks();
+        dsp_freq_xticks(ax_phase, Fs);
         ylabel("Phase (degrees)");
         grid on;
         xlim([0, 1]);

@@ -195,16 +195,28 @@ function dsppack_launch()
     h.edit_Rs = uicontrol(h.fig, "Style", "edit", "String", "40", ...
                            "Units", "normalized", "Position", [0.69, 0.95, 0.05, 0.03]);
 
+    % -- Frequency axis unit toggle (normalized 0-pi <-> Hz 0-Fs/2) --
+    [~, freq_lbl] = dsp_freq_axis_hz();
+    h.btn_FreqAxis = uicontrol(h.fig, "Style", "pushbutton", ...
+                               "String", freq_lbl, ...
+                               "Units", "normalized", ...
+                               "Position", [0.76, 0.945, 0.20, 0.04], ...
+                               "TooltipString", ["Toggle the frequency axis between " ...
+                                                 "normalized units (0 to pi rad/sample) " ...
+                                                 "and absolute frequency (0 to Fs/2 Hz)"], ...
+                               "Callback", @cb_freqaxis_wrapper);
+
     % Right Panel: Magnitude (top) and Phase (bottom) axes
+    Fs0 = str2double(get(h.edit_Fs, "string"));
     h.ax_mag = axes("Units", "normalized", "Position", [0.38, 0.58, 0.58, 0.36]);
     title("Magnitude Response");
-    dsp_freq_xticks();
+    dsp_freq_xticks(h.ax_mag, Fs0);
     ylabel("Magnitude (dB)");
     grid on;
 
     h.ax_phase = axes("Units", "normalized", "Position", [0.38, 0.10, 0.58, 0.36]);
     title("Phase Response");
-    dsp_freq_xticks();
+    dsp_freq_xticks(h.ax_phase, Fs0);
     ylabel("Phase (degrees)");
     grid on;
 
@@ -277,6 +289,15 @@ function dsppack_launch()
     function cb_design_wrapper(src, ~)
         handles = guidata(src);
         dsp_design_callback(handles);
+    end
+
+    function cb_freqaxis_wrapper(src, ~)
+        handles = guidata(src);
+        [~, lbl] = dsp_freq_axis_hz(~dsp_freq_axis_hz());
+        set(handles.btn_FreqAxis, "String", lbl);
+        Fs = str2double(get(handles.edit_Fs, "string"));
+        dsp_freq_xticks(handles.ax_mag,   Fs);
+        dsp_freq_xticks(handles.ax_phase, Fs);
     end
 
     function cb_export_wrapper(src, ~)

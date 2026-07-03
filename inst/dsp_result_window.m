@@ -9,6 +9,17 @@ function dsp_result_window(parent_fig, b, a, Fs)
               "Position", [0.02, 0.955, 0.10, 0.038], ...
               "Callback", @cb_back_wrapper);
 
+    % Frequency axis unit toggle (shares its state with the main screen)
+    [~, freq_lbl] = dsp_freq_axis_hz();
+    h.btn_FreqAxis = uicontrol(h.fig, "Style", "pushbutton", ...
+              "String", freq_lbl, ...
+              "Units", "normalized", ...
+              "Position", [0.76, 0.955, 0.21, 0.038], ...
+              "TooltipString", ["Toggle the frequency axis between " ...
+                                "normalized units (0 to pi rad/sample) " ...
+                                "and absolute frequency (0 to Fs/2 Hz)"], ...
+              "Callback", @cb_freqaxis_wrapper);
+
     % Shared data
     [H, w] = freqz(b, a, 1024);
     wn     = w / pi;   % normalized frequency (×π rad/sample)
@@ -69,7 +80,7 @@ function dsp_result_window(parent_fig, b, a, Fs)
     h.ax_phase = axes("Units", "normalized", "Position", [0.55, 0.68, 0.42, 0.25]);
     plot(wn, unwrap(angle(H)) * (180 / pi), "LineWidth", 2, "Color", [0.85, 0.33, 0.10]);
     title("Phase Response");
-    dsp_freq_xticks();
+    dsp_freq_xticks(h.ax_phase, Fs);
     ylabel("Phase (degrees)");
     grid on;
     xlim([0, 1]);
@@ -83,7 +94,7 @@ function dsp_result_window(parent_fig, b, a, Fs)
     warning(ws);
     plot(w_gd / pi, gd, "LineWidth", 2, "Color", [0.13, 0.55, 0.13]);
     title("Group Delay");
-    dsp_freq_xticks();
+    dsp_freq_xticks(h.ax_gd, Fs);
     ylabel("Delay (samples)");
     grid on;
     xlim([0, 1]);
@@ -165,6 +176,25 @@ function dsp_result_window(parent_fig, b, a, Fs)
         delete(h.fig);
         if ishandle(parent_fig)
             set(parent_fig, "Visible", "on");
+        end
+    end
+
+    function cb_freqaxis_wrapper(src, ~)
+        hh = guidata(src);
+        [~, lbl] = dsp_freq_axis_hz(~dsp_freq_axis_hz());
+        set(hh.btn_FreqAxis, "String", lbl);
+        dsp_freq_xticks(hh.ax_phase, Fs);
+        dsp_freq_xticks(hh.ax_gd,    Fs);
+        % Keep the (hidden) main screen in step so its plots and toggle
+        % button are already correct when the user goes BACK.
+        if ishandle(parent_fig)
+            ph = guidata(parent_fig);
+            if isfield(ph, "btn_FreqAxis")
+                pFs = str2double(get(ph.edit_Fs, "string"));
+                dsp_freq_xticks(ph.ax_mag,   pFs);
+                dsp_freq_xticks(ph.ax_phase, pFs);
+                set(ph.btn_FreqAxis, "String", lbl);
+            end
         end
     end
 end

@@ -108,6 +108,7 @@ This panel contains all the input controls for defining a filter:
 - **Magnitude Response** (top) - Shows the filter gain in dB across frequency.
 - **Stability Indicator** (middle strip) - Green for stable, red for unstable. Displays max pole radius and stability margin.
 - **Phase Response** (bottom) - Shows the phase shift in degrees across frequency.
+- **Freq Axis toggle** (top right, above the magnitude plot) - Switches the frequency axis of both plots between normalized units (0 to pi rad/sample) and absolute frequency (0 to Fs/2, labelled in Hz or kHz). The setting is shared with the Detailed Analysis window, which has the same button. The comparison window always uses normalized units, since its two filters may have different sampling rates.
 
 ### Bottom Bar
 
@@ -201,7 +202,7 @@ A filter **passes** the specification if the blue response curve stays within th
 
 ## 6. Detailed Analysis Window
 
-Click **DETAILED ANALYSIS** to open a comprehensive view with six plots arranged in a 3x2 grid:
+Click **DETAILED ANALYSIS** to open a comprehensive view with six plots arranged in a 3x2 grid. The **Freq Axis** button in the top-right corner switches the frequency axes (Phase Response, Group Delay) between normalized units and Hz, using the same shared setting as the main window.
 
 ### Row 1: Pole-Zero Diagram and Phase Response
 

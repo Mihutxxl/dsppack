@@ -5,7 +5,7 @@ Developed as a Diploma Project at UPT (Universitatea Politehnica Timisoara).
 
 **Author:** Mihut Vlad  
 **License:** GPLv3+  
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 ---
 
@@ -16,11 +16,13 @@ Developed as a Diploma Project at UPT (Universitatea Politehnica Timisoara).
 - **Filter Types** - Low Pass, High Pass, Band Pass, Band Stop
 - **Interactive Pole-Zero Editor** - Drag poles and zeros on the unit circle to shape the filter
 - **Detailed Analysis** - Magnitude, Phase, Group Delay, Impulse Response, Step Response, Pole-Zero Diagram
+- **Frequency Axis Toggle** - Switch response plots between normalized (0 to pi rad/sample) and absolute (0 to Fs/2 Hz) frequency axes
 - **Stability Analysis** - BIBO stability check with pole radius and margin indicators
 - **Specification Mask Overlay** - Passband ripple (Rp) and stopband attenuation (Rs) visualization
 - **Filter Comparison** - Overlay two filter responses side by side
 - **Audio Demo** - Load WAV files, apply filters, play original/filtered, view spectrograms
 - **Code Export** - Generate MATLAB/Octave, C header, or Python/SciPy code
+- **Workspace Export** - Push the designed coefficients to the Octave workspace (`num_coeffs`, `den_coeffs`, `fs_val`)
 - **Report Generation** - Export a self-contained HTML report with all plots and specifications
 - **Save/Load** - Persist filter designs as `.mat` files
 - **Presets** - 12 built-in presets for common audio/signal processing tasks
@@ -36,10 +38,10 @@ Developed as a Diploma Project at UPT (Universitatea Politehnica Timisoara).
 
 ## Installation
 
-### Option 1: Install from Octave Github repo
+### Option 1: Install from local directory
 
 ```octave
-pkg install -forge dsppack
+pkg install /path/to/dsppack/
 ```
 
 ### Option 2: Manual setup
@@ -68,7 +70,7 @@ pkg install -forge dsppack
 pkg list dsppack
 ```
 
-You should see `dsppack` listed with version `1.0.0`.
+You should see `dsppack` listed with version `1.1.0`.
 
 ---
 
@@ -86,7 +88,8 @@ dsppack_launch
 1. Select a **Preset** from the dropdown (e.g., "Bass Isolation") or configure manually
 2. Set the sampling frequency, cutoff frequency, filter order, architecture, type, and topology
 3. Click **DESIGN FILTER** to compute and plot the filter response
-4. Use the bottom bar buttons to access additional features:
+4. Use the **Freq Axis** button (top right, above the magnitude plot) to switch the frequency axes between normalized units (0 to pi rad/sample) and absolute frequency (0 to Fs/2, labelled in Hz/kHz). The setting is shared with the Detailed Analysis window, which has the same button
+5. Use the bottom bar buttons to access additional features:
    - **COMPARE FILTERS** - Compare two filter designs
    - **GENERATE REPORT** - Export an HTML report
    - **AUDIO DEMO** - Test the filter on real audio files
@@ -97,19 +100,26 @@ dsppack_launch
 
 ```
 dsppack/
-  COPYING               - GPLv3 license
-  DESCRIPTION           - Octave package metadata
-  README.md             - This file
+  COPYING                - GPLv3 license
+  DESCRIPTION            - Octave package metadata
+  INDEX                  - Octave package function index
+  README.md              - This file
   doc/
     user_manual.md       - User manual
     code_walkthrough.txt - Line-by-line code explanation
   inst/
-    dsppack_launch.m    - Main GUI entry point
+    dsppack_launch.m     - Main GUI entry point
     dsp_compute_filter.m - Filter computation (IIR + FIR)
     dsp_design_callback.m - Design button handler
     dsp_plot_response.m  - Magnitude/phase plotting
     dsp_check_stability.m - BIBO stability analysis
+    dsp_compute_f3db.m   - -3 dB crossing computation
+    dsp_update_stability.m - Stability indicator strip update
     dsp_draw_mask.m      - Specification mask overlay
+    dsp_draw_zplane.m    - Pole-zero plane rendering
+    dsp_new_window.m     - Standard application window factory
+    dsp_freq_xticks.m    - Frequency axis tick labelling (normalized or Hz)
+    dsp_freq_axis_hz.m   - Shared frequency-axis unit toggle state
     dsp_result_window.m  - Detailed analysis window
     dsp_compare_window.m - Filter comparison window
     dsp_audio_demo.m     - Audio demo window
@@ -140,6 +150,20 @@ dsppack/
 | FIR Anti-aliasing (CD Audio) | FIR | Low Pass | Hamming | 20000 Hz | 64 |
 | FIR Voice Band-pass | FIR | Band Pass | Hamming | 300-3400 Hz | 48 |
 | FIR Noise Suppression | FIR | Low Pass | Blackman | 4000 Hz | 48 |
+
+---
+
+## Changelog
+
+### 1.1.0 (2026-07-03)
+
+- **New: frequency axis unit toggle.** A **Freq Axis** button on the main screen and in the Detailed Analysis window switches every frequency axis between normalized units (0 to pi rad/sample) and absolute frequency (0 to Fs/2), with round tick values labelled in Hz or kHz. The setting is shared between the two windows, persists while the tool is open, and is honored by the spec-mask overlay. Implemented by the new `dsp_freq_axis_hz` helper (shared state) and an extended `dsp_freq_xticks` (tick placement).
+- The Filter Comparison window deliberately keeps normalized units, since the two compared filters may have different sampling rates.
+- User manual updated with the new control; README feature list, quick start, and file listing brought up to date.
+
+### 1.0.x (2026-06-02 to 2026-07-02)
+
+- Initial releases: IIR/FIR filter designer with presets, detailed analysis window, interactive pole-zero editor, filter comparison, audio demo, specification mask overlay, save/load, code export, HTML report generation.
 
 ---
 

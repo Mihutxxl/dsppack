@@ -73,7 +73,7 @@ function dsp_draw_mask(ax, b, a, Fs, Fc, Fc2, type_idx, Rp, Rs)
     hold off;
     grid on;
     title("Magnitude Response");
-    dsp_freq_xticks();
+    dsp_freq_xticks(ax, Fs);
     ylabel("Magnitude (dB)");
     xlim([0, Fn_n]);
     ylim([y_bot, y_top]);

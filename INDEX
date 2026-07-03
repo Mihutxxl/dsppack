@@ -9,6 +9,7 @@ Filter Design
 Utilities
  dsp_new_window
  dsp_freq_xticks
+ dsp_freq_axis_hz
  dsp_update_stability
  dsp_draw_zplane
 GUI Callbacks
