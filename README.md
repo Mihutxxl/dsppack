@@ -14,7 +14,7 @@ Developed as a Diploma Project at UPT (Universitatea Politehnica Timisoara).
 - **IIR Filter Design** - Butterworth, Chebyshev Type I/II, Elliptic
 - **FIR Filter Design** - Hamming, Hanning, Blackman, Kaiser windows, Parks-McClellan, Least-Squares
 - **Filter Types** - Low Pass, High Pass, Band Pass, Band Stop
-- **Interactive Pole-Zero Editor** - Drag poles and zeros on the unit circle to shape the filter
+- **Interactive Pole-Zero Editor** - Manually add poles and zeros on the unit circle to shape the filter
 - **Detailed Analysis** - Magnitude, Phase, Group Delay, Impulse Response, Step Response, Pole-Zero Diagram
 - **Frequency Axis Toggle** - Switch response plots between normalized (0 to pi rad/sample) and absolute (0 to Fs/2 Hz) frequency axes
 - **Stability Analysis** - BIBO stability check with pole radius and margin indicators
@@ -38,11 +38,21 @@ Developed as a Diploma Project at UPT (Universitatea Politehnica Timisoara).
 
 ## Installation
 
-### Option 1: Install from local directory
+### Option 1: Install from official GNU Octave repo
 
-```octave
-pkg install /path/to/dsppack/
-```
+1. In Octave, install the package:
+   ```octave
+   pkg install -forge dsppack
+   ```
+
+2. Load the required packages:
+   ```octave
+   pkg load dsppack
+   ```
+3. Launch the tool:
+   ```octave
+   dsppack_launch
+   ```
 
 ### Option 2: Manual setup
 
