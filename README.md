@@ -5,7 +5,7 @@ Developed as a Diploma Project at UPT (Universitatea Politehnica Timisoara).
 
 **Author:** Mihut Vlad  
 **License:** GPLv3+  
-**Version:** 1.1.0
+**Version:** 1.1.1
 
 ---
 
