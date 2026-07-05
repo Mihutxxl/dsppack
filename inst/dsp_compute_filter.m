@@ -14,7 +14,7 @@ function [b, a] = dsp_compute_filter(Fs, Fc, Fc2, N, type_idx, topo_idx, arch_id
     if nargin < 8 || isempty(Rp); Rp = 3; end
     if nargin < 9 || isempty(Rs); Rs = 40; end
 
-    type_strs = {"low", "high", "bandpass", "stop"};
+    type_strs = {"low", "high", "pass", "stop"};
     type_str  = type_strs{type_idx};
 
     if type_idx <= 2
