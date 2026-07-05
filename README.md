@@ -165,6 +165,10 @@ dsppack/
 
 ## Changelog
 
+### 1.1.1 (2026-07-05)
+
+- Fixed major bug when designing a filter using the bandpass type with the methods Chebyshev I, Chebyshev II and Elliptic for IIR architecture
+
 ### 1.1.0 (2026-07-03)
 
 - **New: frequency axis unit toggle.** A **Freq Axis** button on the main screen and in the Detailed Analysis window switches every frequency axis between normalized units (0 to pi rad/sample) and absolute frequency (0 to Fs/2), with round tick values labelled in Hz or kHz. The setting is shared between the two windows, persists while the tool is open, and is honored by the spec-mask overlay. Implemented by the new `dsp_freq_axis_hz` helper (shared state) and an extended `dsp_freq_xticks` (tick placement).
